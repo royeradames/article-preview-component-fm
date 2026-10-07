@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+:root {
+  --gray-900: hsl(217 19% 35%);
+  --gray-500: hsl(214 17% 51%);
+  --gray-400: hsl(212 23% 69%);
+  --gray-200: hsl(210 46% 95%);
+}
+* { box-sizing: border-box; }
+html { font-size: 100%; }
+body { margin: 0; background: var(--gray-200); color: var(--gray-900); font-family: var(--font-manrope), sans-serif; font-weight: 500; }
+a { color: inherit; text-underline-offset: .2em; }
+button { font: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--gray-900); outline-offset: 3px; }
+
+main { min-height: calc(100svh - 4rem); display: grid; place-items: center; padding: 4rem 1.5rem 2rem; }
+
+.preview-card { display: grid; width: min(100%, 20.4375rem); border-radius: 10px; background: white; box-shadow: 0 2.5rem 2.5rem -0.625rem hsl(212 46% 80% / .5); }
+.preview-image { display: block; width: 100%; height: 12.5rem; object-fit: cover; object-position: center 62%; border-radius: 10px 10px 0 0; }
+.preview-body { display: flex; flex-direction: column; padding: 2rem 2rem 0; }
+h1 { margin: 0; font-size: 1.25rem; font-weight: 700; letter-spacing: .25px; line-height: 1.4; }
+.excerpt { margin: 1.5rem 0 0; color: var(--gray-500); font-size: 1rem; line-height: 1.5; }
+
+.preview-footer { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 4.75rem; margin: 2rem -2rem 0; padding: 1.125rem 2rem; }
+.author { display: flex; align-items: center; gap: 1rem; min-width: 0; }
+.author img { flex: none; border-radius: 50%; }
+.author p { display: grid; margin: 0; font-size: 1rem; line-height: 1.35; }
+.author-name { font-weight: 700; }
+.author time { color: var(--gray-400); }
+
+.share-button { position: relative; z-index: 2; display: grid; place-items: center; flex: none; width: 2.75rem; height: 2.75rem; padding: 0; border: 0; background: transparent; border-radius: 50%; color: var(--gray-500); }
+.share-button::before { content: ""; position: absolute; inset: .375rem; border-radius: 50%; background: var(--gray-200); }
+.share-icon { position: relative; width: 15px; height: 13px; background: currentColor; mask: url("/images/icon-share.svg") center / contain no-repeat; }
+.share-button:hover, .share-button[aria-expanded="true"] { color: white; }
+.share-button:hover::before, .share-button[aria-expanded="true"]::before { background: var(--gray-500); }
+
+.share-menu { position: absolute; inset: 0; z-index: 1; display: flex; align-items: center; gap: 1rem; padding: 0 2rem; border-radius: 0 0 10px 10px; background: var(--gray-900); }
+.share-menu[hidden] { display: none; }
+.share-label { margin: 0; color: var(--gray-400); font-size: 1rem; letter-spacing: .2em; text-transform: uppercase; }
+.share-menu ul { display: flex; align-items: center; gap: 0; margin: 0; padding: 0; list-style: none; }
+.share-menu a { display: grid; place-items: center; width: 2.5rem; height: 2.75rem; border-radius: 6px; }
+.share-menu a:hover img { opacity: .75; }
+.share-menu :focus-visible { outline-color: white; outline-offset: 0; }
+
+.attribution { padding: 0 1.5rem 1rem; color: var(--gray-900); font-size: 1rem; line-height: 1.5; text-align: center; }
+.attribution a { display: inline-block; min-height: 2.75rem; padding-block: .625rem; font-weight: 700; }
+
+@media (min-width: 48rem) {
+  .preview-card { grid-template-columns: 14.3125rem 1fr; width: min(100%, 38rem); }
+  .preview-image { height: 100%; min-height: 21.625rem; object-position: left bottom; border-radius: 10px 0 0 10px; }
+  .preview-body { padding: 2.5rem 2.25rem 2.5rem 2rem; justify-content: center; }
+  .preview-footer { margin: 1.5rem 0 0; padding: 0; min-height: 0; }
+  .share { position: relative; }
+  .share-menu { inset: auto -1.5rem calc(100% + 1.125rem) auto; padding: 1rem 1.5rem; gap: 1.5rem; border-radius: 10px; box-shadow: 0 .625rem .625rem hsl(212 23% 69% / .3); }
+  .share-menu::after { content: ""; position: absolute; top: 100%; right: calc(1.5rem + 1.375rem - .75rem); border: .75rem solid transparent; border-bottom: 0; border-top-color: var(--gray-900); }
+  .share-menu ul { gap: .25rem; }
+  .share-menu a { width: 2.25rem; height: 2.25rem; }
+}
+@media (min-width: 64rem) {
+  .preview-card { grid-template-columns: 17.8125rem 1fr; width: 45.625rem; }
+  .preview-image { min-height: 17.5rem; }
+  .preview-body { padding: 2rem 2.5rem; }
+  .share-menu { inset: auto auto calc(100% + 1.125rem) 50%; translate: -50% 0; padding: 1.125rem 2.375rem; }
+  .share-menu::after { right: auto; left: 50%; translate: -50% 0; }
+}
+.site-name { font-weight: 700; }
