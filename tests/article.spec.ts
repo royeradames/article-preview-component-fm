@@ -118,3 +118,48 @@ test("article content renders without JavaScript and nothing is written", async 
     await context.close();
   }
 });
+
+/* QA sweep October 8 (ICN1): at 320-360 the author name wraps, and the centred avatar drifted below the first line. */
+test("the author photo lines up with the first line of the author text at every width", async ({ page }) => {
+  for (const width of [320, 340, 360, 375, 400, 768, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
+    const offset = await page.locator(".author").evaluate(author => {
+      const photo = author.querySelector("img")!.getBoundingClientRect();
+      // Text-node rects only (as the sweep detector measures), so a block box spanning both name lines can't pass for the first line.
+      const walker = document.createTreeWalker(author.querySelector("p")!, NodeFilter.SHOW_TEXT);
+      const rects: DOMRect[] = [];
+      for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+        if (!node.nodeValue?.trim()) continue;
+        const range = document.createRange();
+        range.selectNodeContents(node);
+        rects.push(...range.getClientRects());
+      }
+      const first = rects.sort((a, b) => a.top - b.top)[0];
+      const centre = (photo.top + photo.bottom) / 2;
+      return centre < first.top - 2 ? centre - first.top : centre > first.bottom + 2 ? centre - first.bottom : 0;
+    });
+    expect(offset, `avatar centre outside the first line at ${width}`).toBe(0);
+  }
+});
+
+/* Journey QA October 8 (STS1): with the share menu open, its links overlapped the author text it covers. Whatever the menu
+   covers must be hidden, and nothing visible may sit under the menu at any width. */
+test("the open share menu never sits over visible author text", async ({ page }) => {
+  for (const width of [320, 375, 400, 600, 768, 1024, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
+    await page.getByRole("button", { name: "Share this article" }).click();
+    await expect(page.locator(".share-menu")).toBeVisible();
+    const under = await page.evaluate(() => {
+      const menu = document.querySelector(".share-menu")!.getBoundingClientRect();
+      const author = document.querySelector(".author")!;
+      if (!author.checkVisibility({ visibilityProperty: true })) return [];
+      return [...author.querySelectorAll("img, .author-name, time")].filter(element => {
+        const box = element.getBoundingClientRect();
+        return Math.min(box.right, menu.right) - Math.max(box.left, menu.left) > 2 && Math.min(box.bottom, menu.bottom) - Math.max(box.top, menu.top) > 2;
+      }).map(element => element.textContent || element.localName);
+    });
+    expect(under, `author under the share menu at ${width}`).toEqual([]);
+  }
+});
