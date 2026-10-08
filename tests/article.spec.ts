@@ -142,3 +142,24 @@ test("the author photo lines up with the first line of the author text at every 
     expect(offset, `avatar centre outside the first line at ${width}`).toBe(0);
   }
 });
+
+/* Journey QA October 8 (STS1): with the share menu open, its links overlapped the author text it covers. Whatever the menu
+   covers must be hidden, and nothing visible may sit under the menu at any width. */
+test("the open share menu never sits over visible author text", async ({ page }) => {
+  for (const width of [320, 375, 400, 600, 768, 1024, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
+    await page.getByRole("button", { name: "Share this article" }).click();
+    await expect(page.locator(".share-menu")).toBeVisible();
+    const under = await page.evaluate(() => {
+      const menu = document.querySelector(".share-menu")!.getBoundingClientRect();
+      const author = document.querySelector(".author")!;
+      if (!author.checkVisibility({ visibilityProperty: true })) return [];
+      return [...author.querySelectorAll("img, .author-name, time")].filter(element => {
+        const box = element.getBoundingClientRect();
+        return Math.min(box.right, menu.right) - Math.max(box.left, menu.left) > 2 && Math.min(box.bottom, menu.bottom) - Math.max(box.top, menu.top) > 2;
+      }).map(element => element.textContent || element.localName);
+    });
+    expect(under, `author under the share menu at ${width}`).toEqual([]);
+  }
+});
