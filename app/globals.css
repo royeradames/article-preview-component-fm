@@ -37,6 +37,8 @@ h1 { margin: 0; font-size: 1.25rem; font-weight: 700; letter-spacing: .25px; lin
 
 .share-menu { position: absolute; inset: 0; z-index: 1; display: flex; align-items: center; gap: 1rem; padding: 0 2rem; border-radius: 0 0 10px 10px; background: var(--gray-900); }
 .share-menu[hidden] { display: none; }
+/* On phones the open menu is a bar over the author row, as in the design; the covered author is hidden, not left under it. */
+@media (max-width: 47.99rem) { .preview-footer:has(.share-menu:not([hidden])) .author { visibility: hidden; } }
 .share-label { margin: 0; color: var(--gray-400); font-size: 1rem; letter-spacing: .2em; text-transform: uppercase; }
 .share-menu ul { display: flex; align-items: center; gap: 0; margin: 0; padding: 0; list-style: none; }
 .share-menu a { display: grid; place-items: center; width: 2.5rem; height: 2.75rem; border-radius: 6px; }
