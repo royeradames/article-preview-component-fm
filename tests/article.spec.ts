@@ -126,9 +126,16 @@ test("the author photo lines up with the first line of the author text at every 
     await page.goto("/");
     const offset = await page.locator(".author").evaluate(author => {
       const photo = author.querySelector("img")!.getBoundingClientRect();
-      const range = document.createRange();
-      range.selectNodeContents(author.querySelector("p")!);
-      const first = [...range.getClientRects()].sort((a, b) => a.top - b.top)[0];
+      // Text-node rects only (as the sweep detector measures), so a block box spanning both name lines can't pass for the first line.
+      const walker = document.createTreeWalker(author.querySelector("p")!, NodeFilter.SHOW_TEXT);
+      const rects: DOMRect[] = [];
+      for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+        if (!node.nodeValue?.trim()) continue;
+        const range = document.createRange();
+        range.selectNodeContents(node);
+        rects.push(...range.getClientRects());
+      }
+      const first = rects.sort((a, b) => a.top - b.top)[0];
       const centre = (photo.top + photo.bottom) / 2;
       return centre < first.top - 2 ? centre - first.top : centre > first.bottom + 2 ? centre - first.bottom : 0;
     });
