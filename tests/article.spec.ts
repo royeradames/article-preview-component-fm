@@ -118,3 +118,20 @@ test("article content renders without JavaScript and nothing is written", async 
     await context.close();
   }
 });
+
+/* QA sweep October 8 (ICN1): at 320-360 the author name wraps, and the centred avatar drifted below the first line. */
+test("the author photo lines up with the first line of the author text at every width", async ({ page }) => {
+  for (const width of [320, 340, 360, 375, 400, 768, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
+    const offset = await page.locator(".author").evaluate(author => {
+      const photo = author.querySelector("img")!.getBoundingClientRect();
+      const range = document.createRange();
+      range.selectNodeContents(author.querySelector("p")!);
+      const first = [...range.getClientRects()].sort((a, b) => a.top - b.top)[0];
+      const centre = (photo.top + photo.bottom) / 2;
+      return centre < first.top - 2 ? centre - first.top : centre > first.bottom + 2 ? centre - first.bottom : 0;
+    });
+    expect(offset, `avatar centre outside the first line at ${width}`).toBe(0);
+  }
+});
