@@ -163,3 +163,18 @@ test("the open share menu never sits over visible author text", async ({ page })
     expect(under, `author under the share menu at ${width}`).toEqual([]);
   }
 });
+
+// The desktop share popover must leave the article readable while it is open.
+test("open desktop share popover leaves the excerpt readable", async ({ page }) => {
+  for (const width of [768, 800, 1024, 1440, 1920]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
+    await page.getByRole("button", { name: "Share this article" }).click();
+    const menu = await page.locator(".share-menu").boundingBox();
+    const excerpt = await page.locator(".excerpt").boundingBox();
+    expect(menu).not.toBeNull();
+    expect(excerpt).not.toBeNull();
+    if (!menu || !excerpt) throw new Error("Missing visible article or share menu");
+    expect.soft(menu.y - (excerpt.y + excerpt.height), `excerpt gap at ${width}`).toBeGreaterThanOrEqual(8);
+  }
+});
