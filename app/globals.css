@@ -2,7 +2,7 @@
 
 :root {
   --gray-900: hsl(217 19% 35%);
-  --gray-500: hsl(214 17% 51%);
+  --gray-500: hsl(214 17% 46%);
   --gray-400: hsl(212 23% 69%);
   --gray-200: hsl(210 46% 95%);
 }
@@ -27,7 +27,7 @@ h1 { margin: 0; font-size: 1.25rem; font-weight: 700; letter-spacing: .25px; lin
 .author img { flex: none; border-radius: 50%; }
 .author p { display: grid; margin: 0; font-size: 1rem; line-height: 1.35; }
 .author-name { font-weight: 700; }
-.author time { color: var(--gray-400); }
+.author time { color: var(--gray-500); }
 
 .share-button { position: relative; z-index: 2; display: grid; place-items: center; flex: none; width: 2.75rem; height: 2.75rem; padding: 0; border: 0; background: transparent; border-radius: 50%; color: var(--gray-500); }
 .share-button::before { content: ""; position: absolute; inset: .375rem; border-radius: 50%; background: var(--gray-200); }
@@ -39,7 +39,7 @@ h1 { margin: 0; font-size: 1.25rem; font-weight: 700; letter-spacing: .25px; lin
 .share-menu[hidden] { display: none; }
 /* On phones the open menu is a bar over the author row, as in the design; the covered author is hidden, not left under it. */
 @media (max-width: 47.99rem) { .preview-footer:has(.share-menu:not([hidden])) .author { visibility: hidden; } }
-.share-label { margin: 0; color: var(--gray-400); font-size: 1rem; letter-spacing: .2em; text-transform: uppercase; }
+.share-label { margin: 0; color: var(--gray-200); font-size: 1rem; letter-spacing: .2em; text-transform: uppercase; }
 .share-menu ul { display: flex; align-items: center; gap: 0; margin: 0; padding: 0; list-style: none; }
 .share-menu a { display: grid; place-items: center; width: 2.5rem; height: 2.75rem; border-radius: 6px; }
 .share-menu a:hover img { opacity: .75; }

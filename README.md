@@ -17,6 +17,7 @@ Original challenge files are preserved under `reference/`; supplied images moved
 ## Design decisions
 
 - The design sets body copy, author, date and the "SHARE" label at 13px. The family 16px floor raises them; the card grows taller than the 280px desktop frame instead of cropping text.
+- The excerpt and date use a darker version of the supplied desaturated blue, and the open "SHARE" label uses the supplied light blue. These adjustments keep normal text above 4.5:1 contrast on its rendered surface; the retained browser regression checks closed and open states at mobile, tablet and desktop widths.
 - The share control is a disclosure button (`aria-expanded`, `aria-controls`). Escape closes it and returns focus, clicking outside or tabbing past the last network closes it.
 - Between 768 and 1023px the popover is right-aligned to the button so the larger 16px label never pushes it past the viewport; at 1024px and up it is centred over the button like the design.
 - The share icon is drawn with a CSS mask of the supplied SVG so it can turn white on hover and while open.
