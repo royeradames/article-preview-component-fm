@@ -110,7 +110,7 @@ test("article content renders without JavaScript and nothing is written", async 
   const writes: string[] = [];
   page.on("request", request => { if (request.method() !== "GET") writes.push(request.url()); });
   try {
-    await page.goto("http://127.0.0.1:4526/");
+    await page.goto("http://127.0.0.1:4596/");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await expect(page.getByText("Michelle Appleton", { exact: true })).toBeVisible();
     expect(writes).toEqual([]);
